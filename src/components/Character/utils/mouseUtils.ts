@@ -27,9 +27,9 @@ export const handleTouchEnd = (
   ) => void
 ) => {
   setTimeout(() => {
-    setMousePosition(0, 0, 0.03, 0.03);
+    setMousePosition(0, 0, 0.02, 0.02);
     setTimeout(() => {
-      setMousePosition(0, 0, 0.1, 0.2);
+      setMousePosition(0, 0, 0.08, 0.15);
     }, 1000);
   }, 2000);
 };
@@ -48,7 +48,7 @@ export const handleHeadRotation = (
     headBone.rotation.y = lerp(
       headBone.rotation.y,
       mouseX * maxRotation,
-      interpolationY
+      interpolationY * 0.8
     );
     let minRotationX = -0.3;
     let maxRotationX = 0.4;
@@ -57,26 +57,26 @@ export const handleHeadRotation = (
         headBone.rotation.x = lerp(
           headBone.rotation.x,
           -mouseY - 0.5 * maxRotation,
-          interpolationX
+          interpolationX * 0.8
         );
       } else {
         headBone.rotation.x = lerp(
           headBone.rotation.x,
           -maxRotation - 0.5 * maxRotation,
-          interpolationX
+          interpolationX * 0.8
         );
       }
     } else {
       headBone.rotation.x = lerp(
         headBone.rotation.x,
         -minRotationX - 0.5 * maxRotation,
-        interpolationX
+        interpolationX * 0.8
       );
     }
   } else {
     if (window.innerWidth > 1024) {
-      headBone.rotation.x = lerp(headBone.rotation.x, -0.4, 0.03);
-      headBone.rotation.y = lerp(headBone.rotation.y, -0.3, 0.03);
+      headBone.rotation.x = lerp(headBone.rotation.x, -0.4, 0.02);
+      headBone.rotation.y = lerp(headBone.rotation.y, -0.3, 0.02);
     }
   }
 };

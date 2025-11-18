@@ -85,8 +85,11 @@ const Scene = () => {
       const onTouchStart = (event: TouchEvent) => {
         const element = event.target as HTMLElement;
         debounce = setTimeout(() => {
-          element?.addEventListener("touchmove", (e: TouchEvent) =>
-            handleTouchMove(e, (x, y) => (mouse = { x, y }))
+          element?.addEventListener(
+            "touchmove",
+            (e: TouchEvent) =>
+              handleTouchMove(e, (x, y) => (mouse = { x, y })),
+            { passive: true }
           );
         }, 200);
       };
@@ -103,11 +106,13 @@ const Scene = () => {
       });
       const landingDiv = document.getElementById("landingDiv");
       if (landingDiv) {
-        landingDiv.addEventListener("touchstart", onTouchStart);
-        landingDiv.addEventListener("touchend", onTouchEnd);
+        landingDiv.addEventListener("touchstart", onTouchStart, {
+          passive: true,
+        });
+        landingDiv.addEventListener("touchend", onTouchEnd, { passive: true });
       }
       const animate = () => {
-        requestAnimationFrame(animate);
+        animationId = requestAnimationFrame(animate);
         if (headBone) {
           handleHeadRotation(
             headBone,
@@ -125,8 +130,13 @@ const Scene = () => {
         }
         renderer.render(scene, camera);
       };
+      let animationId: number;
       animate();
+      
       return () => {
+        if (animationId) {
+          cancelAnimationFrame(animationId);
+        }
         clearTimeout(debounce);
         scene.clear();
         renderer.dispose();
@@ -138,8 +148,8 @@ const Scene = () => {
         }
         if (landingDiv) {
           document.removeEventListener("mousemove", onMouseMove);
-          landingDiv.removeEventListener("touchstart", onTouchStart);
-          landingDiv.removeEventListener("touchend", onTouchEnd);
+          landingDiv.removeEventListener("touchstart", onTouchStart as EventListener);
+          landingDiv.removeEventListener("touchend", onTouchEnd as EventListener);
         }
       };
     }

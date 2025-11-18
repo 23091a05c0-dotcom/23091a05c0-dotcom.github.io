@@ -50,8 +50,10 @@ function SphereGeo({
   useFrame((_state, delta) => {
     if (!isActive) return;
     delta = Math.min(0.1, delta);
+    const t = api.current?.translation();
+    if (!t) return;
     const impulse = vec
-      .copy(api.current!.translation())
+      .copy(t)
       .normalize()
       .multiply(
         new THREE.Vector3(
@@ -130,25 +132,36 @@ const TechStack = () => {
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY || document.documentElement.scrollTop;
-      const threshold = document
-        .getElementById("work")!
-        .getBoundingClientRect().top;
-      setIsActive(scrollY > threshold);
+      const workEl = document.getElementById("work");
+      if (!workEl) return;
+      const workTop = workEl.getBoundingClientRect().top + scrollY;
+      const viewportBottom = scrollY + window.innerHeight;
+      setIsActive(viewportBottom > workTop);
     };
-    document.querySelectorAll(".header a").forEach((elem) => {
-      const element = elem as HTMLAnchorElement;
-      element.addEventListener("click", () => {
-        const interval = setInterval(() => {
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(() => {
           handleScroll();
-        }, 10);
-        setTimeout(() => {
-          clearInterval(interval);
-        }, 1000);
-      });
+          ticking = false;
+        });
+      }
+    };
+    const anchors = Array.from(document.querySelectorAll(".header a"));
+    const anchorHandler = () => setTimeout(handleScroll, 300);
+    anchors.forEach((elem) => {
+      const element = elem as HTMLAnchorElement;
+      element.addEventListener("click", anchorHandler);
     });
-    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("scroll", onScroll);
+      anchors.forEach((elem) => {
+        const element = elem as HTMLAnchorElement;
+        element.removeEventListener("click", anchorHandler);
+      });
     };
   }, []);
   const materials = useMemo(() => {
@@ -172,7 +185,7 @@ const TechStack = () => {
 
       <Canvas
         shadows
-        gl={{ alpha: true, stencil: false, depth: false, antialias: false }}
+        gl={{ alpha: true, stencil: false, depth: true, antialias: true }}
         camera={{ position: [0, 0, 20], fov: 32.5, near: 1, far: 100 }}
         onCreated={(state) => (state.gl.toneMappingExposure = 1.5)}
         className="tech-canvas"
@@ -198,11 +211,7 @@ const TechStack = () => {
             />
           ))}
         </Physics>
-        <Environment
-          files="/models/char_enviorment.hdr"
-          environmentIntensity={0.5}
-          environmentRotation={[0, 4, 2]}
-        />
+        <Environment preset="city" environmentIntensity={0.5} environmentRotation={[0, 4, 2]} />
         <EffectComposer enableNormalPass={false}>
           <N8AO color="#0f002c" aoRadius={2} intensity={1.15} />
         </EffectComposer>

@@ -41,7 +41,7 @@ const setAnimations = (gltf: GLTF) => {
     introAction.reset().play();
     setTimeout(() => {
       const blink = gltf.animations.find((clip) => clip.name === "Blink");
-      mixer.clipAction(blink!).play().fadeIn(0.5);
+      mixer.clipAction(blink!).play().fadeIn(0.8);
     }, 2500);
   }
   function hover(gltf: GLTF, hoverDiv: HTMLDivElement) {
@@ -63,13 +63,13 @@ const setAnimations = (gltf: GLTF) => {
         eyeBrowUpAction.reset();
         eyeBrowUpAction.enabled = true;
         eyeBrowUpAction.setEffectiveWeight(4);
-        eyeBrowUpAction.fadeIn(0.5).play();
+        eyeBrowUpAction.fadeIn(0.7).play();
       }
     };
     const onLeaveFace = () => {
       if (eyeBrowUpAction && isHovering) {
         isHovering = false;
-        eyeBrowUpAction.fadeOut(0.6);
+        eyeBrowUpAction.fadeOut(0.8);
       }
     };
     if (!hoverDiv) return;

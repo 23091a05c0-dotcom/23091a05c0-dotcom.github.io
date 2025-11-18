@@ -13,15 +13,20 @@ const Navbar = () => {
     smoother = ScrollSmoother.create({
       wrapper: "#smooth-wrapper",
       content: "#smooth-content",
-      smooth: 1.7,
-      speed: 1.7,
+      smooth: 2.5,
+      speed: 1,
       effects: true,
       autoResize: true,
       ignoreMobileResize: true,
+      ease: "power3.out",
+      smoothTouch: 0.15,
+      normalizeScroll: true,
     });
 
     smoother.scrollTop(0);
-    smoother.paused(true);
+    if (document.querySelector(".loading-screen")) {
+      smoother.paused(true);
+    }
 
     let links = document.querySelectorAll(".header ul a");
     links.forEach((elem) => {
@@ -31,22 +36,31 @@ const Navbar = () => {
           e.preventDefault();
           let elem = e.currentTarget as HTMLAnchorElement;
           let section = elem.getAttribute("data-href");
-          smoother.scrollTo(section, true, "top top");
+          if (section) {
+            smoother.scrollTo(section, true, "top 20%");
+          }
         }
       });
     });
-    window.addEventListener("resize", () => {
-      ScrollSmoother.refresh(true);
-    });
+    
+    const handleResize = () => {
+      ScrollTrigger.refresh();
+    };
+    
+    window.addEventListener("resize", handleResize);
+    
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
   return (
     <>
       <div className="header">
-        <a href="/#" className="navbar-title" data-cursor="disable">
-          Logo
+        <a href="#about" data-href="#about" className="navbar-title" data-cursor="disable">
+          HATWAR
         </a>
         <a
-          href="mailto:example@mail.com"
+          href="mailto:simhahatwar@mail.com"
           className="navbar-connect"
           data-cursor="disable"
         >

@@ -16,9 +16,6 @@ const setCharacter = (
   const loadCharacter = () => {
     return new Promise<GLTF | null>(async (resolve, reject) => {
       try {
-        // Check if we're in a secure context (HTTPS or localhost)
-        const isSecureContext = window.isSecureContext;
-        
         // For local development, we can try to load the encrypted model
         // but provide a clear error message if it fails
         const encryptedBlob = await decryptFile(
@@ -40,12 +37,30 @@ const setCharacter = (
                 mesh.frustumCulled = true;
               }
             });
-            resolve(gltf);
+            // Position the character
+            character.position.set(0, 0, 0);
+            character.rotation.set(0, 0, 0);
+            character.scale.set(1, 1, 1);
+            
+            // Set up character animations and timelines
             setCharTimeline(character, camera);
             setAllTimeline();
-            character.getObjectByName("footR")!.position.y = 3.36;
-            character.getObjectByName("footL")!.position.y = 3.36;
+            
+            // Adjust foot positions if they exist
+            const footR = character.getObjectByName("footR");
+            const footL = character.getObjectByName("footL");
+            
+            if (footR) footR.position.y = 0;
+            if (footL) footL.position.y = 0;
+            
+            // Center the character
+            const box = new THREE.Box3().setFromObject(character);
+            const center = box.getCenter(new THREE.Vector3());
+            character.position.sub(center);
+            
+            // Clean up
             dracoLoader.dispose();
+            resolve(gltf);
           },
           undefined,
           (error) => {

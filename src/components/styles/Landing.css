@@ -109,6 +109,7 @@
   z-index: 0;
   bottom: 50px;
   pointer-events: inherit;
+  will-change: transform, opacity;
 }
 .character-model::after {
   content: "";

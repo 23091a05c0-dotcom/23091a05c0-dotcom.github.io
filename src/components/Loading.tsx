@@ -3,6 +3,7 @@ import "./styles/Loading.css";
 import { useLoading } from "../context/LoadingProvider";
 
 import Marquee from "react-fast-marquee";
+import { smoother } from "./Navbar";
 
 const Loading = ({ percent }: { percent: number }) => {
   const { setIsLoading } = useLoading();
@@ -15,11 +16,12 @@ const Loading = ({ percent }: { percent: number }) => {
       setLoaded(true);
       setTimeout(() => {
         setIsLoaded(true);
-      }, 1000);
-    }, 600);
+      }, 800);
+    }, 400);
   }
 
   useEffect(() => {
+    document.body.classList.add("scroll-lock");
     if (isLoaded) {
       import("../components/utils/initialFX").then((module) => {
         setClicked(true);
@@ -27,10 +29,19 @@ const Loading = ({ percent }: { percent: number }) => {
           if (module.initialFX) {
             module.initialFX();
           }
+          document.body.classList.remove("scroll-lock");
           setIsLoading(false);
-        }, 900);
+        }, 700);
       }).catch(error => {
         console.error("Error loading initialFX:", error);
+        document.body.classList.remove("scroll-lock");
+        try {
+          if (smoother) {
+            smoother.paused(false);
+          }
+        } catch (_) {
+          console.error("Error with smoother:", _);
+        }
         setIsLoading(false);
       });
     }
@@ -85,6 +96,7 @@ const Loading = ({ percent }: { percent: number }) => {
             </div>
             <div className="loading-content2">
               <span>Welcome</span>
+              <span>Namaskaram</span>
             </div>
           </div>
         </div>
@@ -111,9 +123,9 @@ export const setProgress = (setLoading: (value: number) => void) => {
         if (percent > 91) {
           clearInterval(interval);
         }
-      }, 2000);
+      }, 1500);
     }
-  }, 100);
+  }, 50);
 
   function clear() {
     clearInterval(interval);

@@ -4,12 +4,15 @@ import { smoother } from "../Navbar";
 
 export function initialFX() {
   document.body.style.overflowY = "auto";
-  smoother.paused(false);
+  if (smoother) {
+    smoother.paused(false);
+  }
   document.getElementsByTagName("main")[0].classList.add("main-active");
   gsap.to("body", {
     backgroundColor: "#0b080c",
-    duration: 0.5,
+    duration: 1,
     delay: 1,
+    ease: "power2.inOut",
   });
 
   var landingText = new SplitText(
@@ -24,11 +27,11 @@ export function initialFX() {
     { opacity: 0, y: 80, filter: "blur(5px)" },
     {
       opacity: 1,
-      duration: 1.2,
+      duration: 1.5,
       filter: "blur(0px)",
-      ease: "power3.inOut",
+      ease: "power4.out",
       y: 0,
-      stagger: 0.025,
+      stagger: 0.02,
       delay: 0.3,
     }
   );
@@ -41,11 +44,11 @@ export function initialFX() {
     { opacity: 0, y: 80, filter: "blur(5px)" },
     {
       opacity: 1,
-      duration: 1.2,
+      duration: 1.5,
       filter: "blur(0px)",
-      ease: "power3.inOut",
+      ease: "power4.out",
       y: 0,
-      stagger: 0.025,
+      stagger: 0.02,
       delay: 0.3,
     }
   );
@@ -55,8 +58,8 @@ export function initialFX() {
     { opacity: 0, y: 30 },
     {
       opacity: 1,
-      duration: 1.2,
-      ease: "power1.inOut",
+      duration: 1.5,
+      ease: "power3.out",
       y: 0,
       delay: 0.8,
     }
@@ -66,8 +69,8 @@ export function initialFX() {
     { opacity: 0 },
     {
       opacity: 1,
-      duration: 1.2,
-      ease: "power1.inOut",
+      duration: 1.5,
+      ease: "power2.out",
       delay: 0.1,
     }
   );
@@ -90,10 +93,10 @@ function LoopText(Text1: SplitText, Text2: SplitText) {
     { opacity: 0, y: 80 },
     {
       opacity: 1,
-      duration: 1.2,
-      ease: "power3.inOut",
+      duration: 1.5,
+      ease: "power4.out",
       y: 0,
-      stagger: 0.1,
+      stagger: 0.08,
       delay: delay,
     },
     0
@@ -102,10 +105,10 @@ function LoopText(Text1: SplitText, Text2: SplitText) {
       Text1.chars,
       { y: 80 },
       {
-        duration: 1.2,
-        ease: "power3.inOut",
+        duration: 1.5,
+        ease: "power4.out",
         y: 0,
-        stagger: 0.1,
+        stagger: 0.08,
         delay: delay2,
       },
       1
@@ -115,9 +118,9 @@ function LoopText(Text1: SplitText, Text2: SplitText) {
       { y: 0 },
       {
         y: -80,
-        duration: 1.2,
-        ease: "power3.inOut",
-        stagger: 0.1,
+        duration: 1.5,
+        ease: "power4.in",
+        stagger: 0.08,
         delay: delay,
       },
       0
@@ -126,9 +129,9 @@ function LoopText(Text1: SplitText, Text2: SplitText) {
       Text2.chars,
       {
         y: -80,
-        duration: 1.2,
-        ease: "power3.inOut",
-        stagger: 0.1,
+        duration: 1.5,
+        ease: "power4.in",
+        stagger: 0.08,
         delay: delay2,
       },
       1

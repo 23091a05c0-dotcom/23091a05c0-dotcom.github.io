@@ -37,3 +37,6 @@ Thumbs.db
 
 # Large files
 public/models/character.glb
+public/resume.pdf
+
+.vercel

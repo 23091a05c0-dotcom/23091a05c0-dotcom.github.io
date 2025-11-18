@@ -6,7 +6,6 @@
   font-optical-sizing: auto;
   font-style: normal;
   line-height: 1.5;
-  scroll-behavior: smooth;
   color-scheme: light dark;
   color: #eae5ec;
   background-color: var(--backgroundColor);
@@ -22,6 +21,7 @@
   --backgroundColor: #0b080c;
   --vh: 100vh;
   --vh: 100svh;
+  --peddishPurple: #a64dff;
 }
 h1,
 h2,
@@ -31,7 +31,9 @@ h5,
 h6 {
   font-family: "Geist", sans-serif;
 }
-body {
+html { scroll-behavior: smooth; }
+/* Scroll locking is controlled via the .scroll-lock class during loader */
+.scroll-lock {
   overflow: hidden;
 }
 a {
@@ -40,14 +42,15 @@ a {
 }
 a:hover {
   color: var(--accentColor);
+  transition: color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 main {
   opacity: 1;
-  transition: 0.3s;
+  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .main-active {
   opacity: 0;
-  animation: fadeIn 1s 1;
+  animation: fadeIn 1.5s 1;
   animation-fill-mode: forwards;
 }
 @keyframes fadeIn {
@@ -90,6 +93,16 @@ body {
   white-space: nowrap;
   flex-wrap: nowrap;
 }
+.florisa {
+  font-family: "Florisa", "Geist", sans-serif;
+}
+.split-line.florisa, .split-line.florisa div {
+  font-family: "Florisa", "Geist", sans-serif;
+}
+h1.florisa {
+  font-family: "Florisa", "Geist", sans-serif;
+  color: var(--peddishPurple);
+}
 
 .techstack {
   width: 100%;
@@ -97,7 +110,7 @@ body {
   height: var(--vh);
   margin: auto;
   margin-top: 50px;
-  margin-bottom: -100px;
+  margin-bottom: 100px;
 }
 
 .techstack h2 {
@@ -121,3 +134,14 @@ body {
     font-size: 40px;
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+  html, body {
+    scroll-behavior: auto !important;
+  }
+}
+
